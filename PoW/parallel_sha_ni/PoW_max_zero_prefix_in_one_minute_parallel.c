@@ -48,7 +48,7 @@ void calculate_sha256(const unsigned char *buffer, size_t length, unsigned char 
 int main(int argc, char *argv[]) {
     long long total_iterations, found_zero_prefix = 0;
     long input_file_size;
-    char *global_input_file_content, *best_global_line_to_append, *hex_id, *requested_ehuskoins;
+    char *global_input_file_content, *best_global_line_to_append, *hex_id, *requested_bkcoins;
     unsigned char best_global_hash[SHA256_DIGEST_LENGTH];
     int nthreads, tid, added_space;
     double elapsed_time;
@@ -56,12 +56,12 @@ int main(int argc, char *argv[]) {
     struct timespec startTime, currentTime;
 
     if (argc != 5) {
-        printf("Usage: %s <input_file> <output_file> <hex_id> <requested_ehuskoins>\n", argv[0]);
+        printf("Usage: %s <input_file> <output_file> <hex_id> <requested_bkcoins>\n", argv[0]);
         return 1;
     }
 
     hex_id = argv[3];
-    requested_ehuskoins = argv[4];
+    requested_bkcoins = argv[4];
 
     input_file = fopen(argv[1], "r");
 
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
     fseek(input_file, 0, SEEK_SET);
 
     // copy input file to a buffer
-    added_space = HEX_STRING_LENGTH + strlen(hex_id) + strlen(requested_ehuskoins) + 4; // '\n' + hex_string + ' ' + hex_id + ' ' + ehuskoins + '\0'
+    added_space = HEX_STRING_LENGTH + strlen(hex_id) + strlen(requested_bkcoins) + 4; // '\n' + hex_string + ' ' + hex_id + ' ' + bkcoins + '\0'
     best_global_line_to_append = (char *) malloc(added_space);
     global_input_file_content = (char *) malloc(input_file_size + added_space);
 
@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
     best_global_hash[0] = 0x10; // dummy starting value
     total_iterations = pow(16, HEX_STRING_LENGTH);
 
-    #pragma omp parallel default(none) shared(nthreads, startTime, currentTime, elapsed_time, total_iterations, input_file_size, best_global_hash, best_global_line_to_append, global_input_file_content, hex_id, requested_ehuskoins, added_space)
+    #pragma omp parallel default(none) shared(nthreads, startTime, currentTime, elapsed_time, total_iterations, input_file_size, best_global_hash, best_global_line_to_append, global_input_file_content, hex_id, requested_bkcoins, added_space)
     {
         int tid;
         unsigned char hash[SHA256_DIGEST_LENGTH], best_local_hash[SHA256_DIGEST_LENGTH];
@@ -123,7 +123,7 @@ int main(int argc, char *argv[]) {
             }
             
             generate_hex_string(hex_string, HEX_STRING_LENGTH, start_index++);
-            snprintf(line_to_append, added_space, "\n%s %s %s", hex_string, hex_id, requested_ehuskoins);
+            snprintf(line_to_append, added_space, "\n%s %s %s", hex_string, hex_id, requested_bkcoins);
             line_to_append[added_space-1] = '\0';
             strcpy(&local_input_file_content[input_file_size], line_to_append);
 
