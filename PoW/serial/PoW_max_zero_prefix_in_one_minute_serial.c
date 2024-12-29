@@ -37,18 +37,18 @@ void generate_hex_string(char *hex_string, int length, int index) {
 int main(int argc, char *argv[]) {
     int index = 0, found_zero_prefix = 0, added_space;
     long input_file_size;
-    char *input_file_content, hex_string[HEX_STRING_LENGTH], *line_to_append, *best_line_to_append, *hex_id, *requested_ehuskoins;
+    char *input_file_content, hex_string[HEX_STRING_LENGTH], *line_to_append, *best_line_to_append, *hex_id, *requested_bkcoins;
     unsigned char hash[SHA256_DIGEST_LENGTH], best_hash[SHA256_DIGEST_LENGTH];
     FILE *input_file, *output_file;
     clock_t startTime, currentTime;
 
     if (argc != 5) {
-        printf("Usage: %s <input_file> <output_file> <hex_id> <requested_ehuskoins>\n", argv[0]);
+        printf("Usage: %s <input_file> <output_file> <hex_id> <requested_bkcoins>\n", argv[0]);
         return 1;
     }
 
     hex_id = argv[3];
-    requested_ehuskoins = argv[4];
+    requested_bkcoins = argv[4];
 
     input_file = fopen(argv[1], "r");
 
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
     fseek(input_file, 0, SEEK_SET);
 
     // copy input file to a buffer
-    added_space = HEX_STRING_LENGTH + strlen(hex_id) + strlen(requested_ehuskoins) + 4; // '\n' + hex_string + ' ' + hex_id + ' ' + ehuskoins + '\0'
+    added_space = HEX_STRING_LENGTH + strlen(hex_id) + strlen(requested_bkcoins) + 4; // '\n' + hex_string + ' ' + hex_id + ' ' + bkcoins + '\0'
     line_to_append = (char *) malloc(added_space);
     best_line_to_append = (char *) malloc(added_space);
     input_file_content = (char *) malloc(input_file_size + added_space); 
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
     currentTime = startTime = clock();
     while ((currentTime - startTime) < ONE_MINUTE) {
         generate_hex_string(hex_string, HEX_STRING_LENGTH, index++);
-        snprintf(line_to_append, added_space, "\n%s %s %s", hex_string, hex_id, requested_ehuskoins);
+        snprintf(line_to_append, added_space, "\n%s %s %s", hex_string, hex_id, requested_bkcoins);
 
         strcpy(&input_file_content[input_file_size], line_to_append);
 
