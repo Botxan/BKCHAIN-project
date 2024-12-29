@@ -100,7 +100,4 @@ contract Lottery {
         payable(owner).transfer(balance);
     }
 
-    receive() external payable {
-        emit FundingReceived(msg.value);
-    }
 }
